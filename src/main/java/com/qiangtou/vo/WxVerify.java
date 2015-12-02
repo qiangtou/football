@@ -10,12 +10,21 @@ import java.util.Arrays;
  */
 public class WxVerify {
 
+    private String token="wszgr";
     private String signature;
     private String timestamp;
     private String nonce;
     private String echostr;
 
     public WxVerify() {
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getSignature() {
@@ -57,7 +66,7 @@ public class WxVerify {
                 || StringUtils.isEmpty(this.getSignature())) {
                 return false;
         }
-        String arr[] = new String[]{this.getEchostr(), this.getNonce(), this.getTimestamp()};
+        String arr[] = new String[]{this.getToken(), this.getNonce(), this.getTimestamp()};
         Arrays.sort(arr);
         return EncoderHandler.encode("sha1", arr[0] + arr[1] + arr[2]).equals(this.getSignature());
     }
@@ -73,11 +82,22 @@ public class WxVerify {
     }
 
     public static void main(String[] args) {
+
+        String token="wszgr";
+        String nonce="sdfg345dgs";
+        String timestamp=System.currentTimeMillis() + "";
+        String arr[] = new String[]{token, nonce, timestamp};
+        Arrays.sort(arr);
+        String merge=arr[0]+arr[1]+arr[2];
+        System.out.println(merge);
+        String signature=EncoderHandler.encode("SHA1", merge);
+        System.out.println(signature);
+
         WxVerify v = new WxVerify();
         v.setEchostr("1");
-        v.setNonce("234234");
-        v.setTimestamp(System.currentTimeMillis() + "");
-        v.setSignature("ttt");
+        v.setNonce(nonce);
+        v.setTimestamp(timestamp);
+        v.setSignature(signature);
         System.out.print(v.verify());
     }
 }
